@@ -6,13 +6,13 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:00:42 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/09/17 10:23:55 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/09/20 02:40:03 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	*routine2(t_philo aldo, t_data time)
+void	*routine2(void *args)
 {
 		gettimeofday(&tv, NULL);
 	while (!aldo.dead && aldo.n_of_meals < time.num_of_meals)
@@ -38,7 +38,7 @@ void	*routine2(t_philo aldo, t_data time)
 	}
 }
 
-void	*routine(t_philo aldo, t_data time)
+void	*routine(void *args)
 {
 	gettimeofday(&tv, NULL);
 	while (!aldo.dead)
@@ -66,8 +66,8 @@ void	*routine(t_philo aldo, t_data time)
 void	inizialize_threads(t_data info)
 {
 	int	i;
-	t_philo			guests[info.num_of_philosophers];
-	pthread_mutex_t	forks[info.num_of_philosophers];
+	t_philo	*guests = (t_philo *)malloc(sizeof(t_philo) * info.num_of_philosophers);
+	t_fork	*forks = (t_fork *)malloc(sizeof(t_fork) * info.num_of_philosophers);
 
 	i = 0;
 	gettimeofday(&tv, NULL);
@@ -76,11 +76,11 @@ void	inizialize_threads(t_data info)
 		guests[i].dead = 0;
 		guests[i].philo_id = i + 1;
 		guests[i].n_of_meals = 0;
-		guests[i].left = forks[i];
+		guests[i].left = forks[i].forchetta;
 		if (i == info.num_of_philosophers - 1)
-			guests[i].right = forks[0];
+			guests[i].right = forks[0].forchetta;
 		else
-			guests[i].right = forks[i + 1];
+			guests[i].right = forks[i + 1].forchetta;
 		guests[i].last_meal = tv.tv_usec;
 		pthread_mutex_init(&guests[i].left, NULL);
 		pthread_mutex_init(&guests[i].right, NULL);

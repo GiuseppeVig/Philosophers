@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:12:17 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/09/17 10:23:26 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/09/20 02:35:48 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,16 @@ typedef struct	philosophers
 	int					timetodie;
 	int					n_of_meals;
 	int					dead;
-	pthread_mutex_t	left;
-	pthread_mutex_t		right;
+	pthread_mutex_t		*left;
+	pthread_mutex_t		*right;
 } t_philo;
+
+typedef struct	s_fork
+{
+	pthread_mutex_t	*forchetta;
+	int				locked;
+}				t_fork;
+
 
 typedef struct data
 {

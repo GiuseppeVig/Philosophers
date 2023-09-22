@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:08:05 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/09/17 09:32:41 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/09/20 06:12:49 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,3 @@ t_data	get_data(char **args, int limit)
 	return (requests);
 }
 
-void	start(t_data val)
-{
-	int	i;
-
-	i = 0;
-	while (i < val.num_of_philosophers)
-	{
-		t_philo new;
-	}
-}

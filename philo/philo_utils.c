@@ -6,11 +6,19 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:08:05 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/09/20 06:12:49 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/11/18 06:45:56 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+int	timestamp(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((int)tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
 
 int	ft_atoi(char *str)
 {
@@ -31,22 +39,51 @@ int	ft_atoi(char *str)
 	while(str[i] > '0' && str[i] < '9')
 	{
 		val += (str[i] - '0');
+		if (str[i + 1] == '\0')
+			return (val * neg);
 		val *= 10;
 		i++;
 	}
 	return (val * neg);
 }
 
-t_data	get_data(char **args, int limit)
+void	check_errors(char **args, int limit)
 {
-	t_data	requests;
+	int	i;
+	int	j;
+	int	check;
 
-	requests.num_of_philosophers = ft_atoi(args[1]);
-	requests.t_of_death = ft_atoi(args[2]);
-	requests.t_to_eat = ft_atoi(args[3]);
-	requests.t_to_sleep = ft_atoi(args[4]);
+	i = 1;
 	if (limit)
-		requests.num_of_meals = ft_atoi(args[5]);
-	return (requests);
+		check = 5;
+	else
+		check = 4;
+	while (i <= check)
+	{
+		j = 0;
+		while (args[i][j])
+		{
+			if (args[i][j] < '0' || args[i][j] > '9')
+			{
+				printf("Error: Invalid value for argument");
+				exit(1);
+			}
+			else
+				j++;
+		}
+		i++;
+	}
+}
+
+void	get_data(char **args, int limit, t_data *requests)
+{
+	check_errors(args, limit);
+	requests->num_of_philosophers = ft_atoi(args[1]);
+	requests->t_of_death = ft_atoi(args[2]) * 1000;
+	requests->t_to_eat = ft_atoi(args[3]) * 1000;
+	requests->t_to_sleep = ft_atoi(args[4]) * 1000;
+	if (limit)
+		requests->num_of_meals = ft_atoi(args[5]);
+	requests->end = 0;
 }
 

@@ -6,100 +6,77 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:00:42 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/09/22 10:51:09 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/11/18 07:29:05 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "philosophers.h"
 
-void	*routine2(void *args)
+void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info)
 {
-	t_philo	*aldo = (t_philo *)args;
-
-	gettimeofday(&tm, &tz);
-	while (!aldo->dead && aldo->n_of_meals < aldo->informations.num_of_meals)
+	if (phi->id % 2 == 0)
 	{
-		if (tm.tv_usec - aldo->last_meal> aldo->informations.t_of_death)
-		{
-			printf("Philosopher %d is fucking dead\n", aldo->philo_id);
-			exit(0);
-		}
-		if (!pthread_mutex_lock(aldo->left->forchetta) && !pthread_mutex_lock(aldo->right->forchetta))
-		{
-			pthread_mutex_unlock(&aldo->write);
-			printf("Philosopher %d is eating\n", aldo->philo_id);
-			aldo->n_of_meals++;
-			aldo->last_meal = tm.tv_usec;
-			printf("Philosopher %d is sleeping\n", aldo->philo_id);
-			usleep(aldo->informations.t_to_sleep);
-		}
-		else if (pthread_mutex_lock(&aldo->write))
-			printf("Philosopher %d is thinking\n", aldo->philo_id);
-		pthread_mutex_unlock(aldo->left->forchetta);
-		pthread_mutex_unlock(aldo->right->forchetta);
+		phi->r_fork = &forks[i]->fork;
+		if (i == 0)
+			phi->l_fork = &forks[info->num_of_philosophers]->fork;
+		else
+			phi->l_fork = &forks[i - 1]->fork;
 	}
-	return (aldo);
+	else
+	{
+		phi->l_fork = &forks[i]->fork;
+		if (i == 0)
+			phi->r_fork = &forks[info->num_of_philosophers]->fork;
+		else
+			phi->r_fork = &forks[i - 1]->fork;
+	}
 }
 
-void	*routine(void *args)
+void	init_philos(t_data *info)
 {
-	t_philo	*aldo = (t_philo *)args;
-	gettimeofday(&tm, &tz);
-	while (!aldo->dead)
-	{
-		if (tm.tv_usec - aldo->last_meal > aldo->informations.t_of_death)
-		{
-			printf("Philosopher %d is fucking dead\n", aldo->philo_id);
-			exit(1);
-		}
-		if (!pthread_mutex_lock(aldo->left->forchetta) && !pthread_mutex_lock(aldo->right->forchetta))
-		{
-			printf("Philosopher %d is eating\n", aldo->philo_id);
-			aldo->last_meal = tm.tv_usec;
-			usleep(aldo->informations.t_to_eat);
-			pthread_mutex_unlock(&aldo->write);
-			printf("Philosopher %d is sleeping\n", aldo->philo_id);
-			usleep(aldo->informations.t_to_sleep);
-		}
-		else if (pthread_mutex_lock(&aldo->write))
-			printf("Philosopher %d is thinking\n", aldo->philo_id);
-		pthread_mutex_unlock(aldo->left->forchetta);
-		pthread_mutex_unlock(aldo->right->forchetta);
-	}
-	return (aldo);
-}
-
-void	inizialize_threads(t_data info)
-{
-	int	i;
-	t_philo	*guests = (t_philo *)malloc(sizeof(t_philo) * info.num_of_philosophers);
-	t_fork	*forks = (t_fork *)malloc(sizeof(t_fork) * info.num_of_philosophers);
+	int		i;
+	t_philo	*philos;
 
 	i = 0;
-	gettimeofday(&tm, &tz);
-	while (i < info.num_of_philosophers)
+	while (i < info->num_of_philosophers)
 	{
-		guests[i].dead = 0;
-		guests[i].philo_id = i + 1;
-		guests[i].n_of_meals = 0;
-		guests[i].left->forchetta = forks[i].forchetta;
-		if (i == info.num_of_philosophers - 1)
-			guests[i].right->forchetta = forks[0].forchetta;
-		else
-			guests[i].right->forchetta = forks[i + 1].forchetta;
-		guests[i].last_meal = tm.tv_usec;
-		pthread_mutex_init(guests[i].left->forchetta, NULL);
-		pthread_mutex_init(guests[i].right->forchetta, NULL);
-		if (info.num_of_meals != 0)
-			pthread_create(&guests[i].id, NULL, *routine, (&guests[i]));
-		else
-			pthread_create(&guests[i].id, NULL, *routine2, (&guests[i]));
+		philos = info->phi + i;
+		philos->id = i + 1;
+		philos->n_of_meals = 0;
+		philos->is_eating = 0;
+		philos->is_full = 0;
+		philos->data = info;
+		assign_forks(philos, info->forks, i, info);
 	}
+}
+
+void	*inizialize_threads(t_data *info)
+{
+	int	i;
+	info->phi = malloc(sizeof(t_philo) * info->num_of_philosophers);
+	info->forks = malloc(sizeof(t_fork) * info->num_of_philosophers);
+	if (!info->phi || info->forks)
+	{
+		printf("Error: Philosophers must be more than 0\n");
+		exit(1);
+	}
+
+	i = 0;
+	while (i < info->num_of_philosophers)
+	{
+		pthread_mutex_init(&info->forks[i].fork, NULL);
+		info->forks[i].id = i + 1;
+	}
+	init_philos(info);
+	pthread_mutex_init(&info->write);
 }
 
 int	main(int argc, char **argv)
 {
 	t_data	values;
+	int i = 0;
+	t_philo *philos;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -107,9 +84,20 @@ int	main(int argc, char **argv)
 		exit(1);
 	}
 	if (argc == 5)
-		values = get_data(argv, 0);
+		get_data(argv, 0, &values);
 	else if (argc == 6)
-		values = get_data(argv, 1);
-	inizialize_threads(values);
+		get_data(argv, 1, &values);
+	philos = inizialize_threads(&values);
+	while (i < values.num_of_philosophers)
+	{
+		pthread_create(&philos[i].th, NULL, routine2, &philos[i]);
+		i++;
+	}
+	i = 0;
+	while (i < values.num_of_philosophers)
+	{
+		pthread_join(philos[i].th, NULL);
+		i++;
+	}
 	return (0);
 }

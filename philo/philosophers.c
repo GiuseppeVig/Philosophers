@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:00:42 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 09:08:52 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/11/18 09:24:57 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,9 @@ void	init_philos(t_data *info)
 void	inizialize_threads(t_data *info)
 {
 	int	i;
+	
 	info->phi = malloc(sizeof(t_philo) * info->num_of_philosophers);
 	info->forks = malloc(sizeof(t_fork) * info->num_of_philosophers);
-	if (!info->phi || info->forks)
-	{
-		printf("Error: Philosophers must be more than 0\n");
-		exit(1);
-	}
-
 	i = 0;
 	while (i < info->num_of_philosophers)
 	{

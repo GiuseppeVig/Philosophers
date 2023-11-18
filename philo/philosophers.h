@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:12:17 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 09:04:50 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/11/18 09:19:36 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stdlib.h>
 # include <signal.h>
 # include <sys/time.h>
+
+typedef struct s_data t_data;
 
 typedef struct	s_fork
 {
@@ -41,7 +43,7 @@ typedef struct	s_philosophers
 	pthread_mutex_t	lock;
 } t_philo;
 
-typedef struct s_data
+struct s_data
 {
 	int	num_of_philosophers;
 	int	t_of_death;
@@ -55,7 +57,7 @@ typedef struct s_data
 	t_fork	*forks;
 	pthread_mutex_t		write;
 	pthread_mutex_t		lock;
-}	t_data;
+};
 
 
 void	get_data(char **args, int limit, t_data *info);
@@ -63,12 +65,12 @@ void	inizialize_threads(t_data *info);
 int		ft_atoi(char *str);
 int	timestamp(void);
 void	take_forks(t_philo *phi);
-void	sleep(t_philo *phi);
+void	sleeping(t_philo *phi);
 void	eat(t_philo *phi);
 void	think(t_philo *phi);
 void	init_philos(t_data *info);
 void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info);
-void	wait_for_start(t_data *info);
+void	wait_for_start(t_philo *phi);
 void	check_errors(char **args, int limit);
 void	*routine(void *data);
 void	dinner_time(t_data *info);

@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:08:05 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 08:49:55 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/11/18 09:20:25 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ void	get_data(char **args, int limit, t_data *requests)
 	requests->waiting = 1;
 }
 
-void	wait_for_start(t_data *info)
+void	wait_for_start(t_philo *phi)
 {
-	while (info->waiting)
+	while (phi->data->waiting)
 		;
 }

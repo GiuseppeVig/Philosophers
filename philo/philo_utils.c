@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:08:05 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 06:45:56 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/11/18 08:49:55 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,14 @@ void	get_data(char **args, int limit, t_data *requests)
 	requests->t_to_sleep = ft_atoi(args[4]) * 1000;
 	if (limit)
 		requests->num_of_meals = ft_atoi(args[5]);
+	else
+		requests->num_of_meals = -1;
 	requests->end = 0;
+	requests->waiting = 1;
 }
 
+void	wait_for_start(t_data *info)
+{
+	while (info->waiting)
+		;
+}

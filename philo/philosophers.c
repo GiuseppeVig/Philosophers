@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:00:42 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 07:29:05 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/11/18 09:01:59 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,19 @@ void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info)
 {
 	if (phi->id % 2 == 0)
 	{
-		phi->r_fork = &forks[i]->fork;
+		phi->r_fork = &forks[i].fork;
 		if (i == 0)
-			phi->l_fork = &forks[info->num_of_philosophers]->fork;
+			phi->l_fork = &forks[info->num_of_philosophers].fork;
 		else
-			phi->l_fork = &forks[i - 1]->fork;
+			phi->l_fork = &forks[i - 1].fork;
 	}
 	else
 	{
-		phi->l_fork = &forks[i]->fork;
+		phi->l_fork = &forks[i].fork;
 		if (i == 0)
-			phi->r_fork = &forks[info->num_of_philosophers]->fork;
+			phi->r_fork = &forks[info->num_of_philosophers].fork;
 		else
-			phi->r_fork = &forks[i - 1]->fork;
+			phi->r_fork = &forks[i - 1].fork;
 	}
 }
 
@@ -48,10 +48,12 @@ void	init_philos(t_data *info)
 		philos->is_full = 0;
 		philos->data = info;
 		assign_forks(philos, info->forks, i, info);
+		pthread_mutex_init(&info->write, NULL);
+		pthread_mutex_init(&info->lock, NULL);
 	}
 }
 
-void	*inizialize_threads(t_data *info)
+void	inizialize_threads(t_data *info)
 {
 	int	i;
 	info->phi = malloc(sizeof(t_philo) * info->num_of_philosophers);
@@ -69,14 +71,14 @@ void	*inizialize_threads(t_data *info)
 		info->forks[i].id = i + 1;
 	}
 	init_philos(info);
-	pthread_mutex_init(&info->write);
+	pthread_mutex_init(&info->write, NULL);
+	pthread_mutex_init(&info->lock, NULL);
 }
 
 int	main(int argc, char **argv)
 {
 	t_data	values;
-	int i = 0;
-	t_philo *philos;
+	int i;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -87,16 +89,11 @@ int	main(int argc, char **argv)
 		get_data(argv, 0, &values);
 	else if (argc == 6)
 		get_data(argv, 1, &values);
-	philos = inizialize_threads(&values);
-	while (i < values.num_of_philosophers)
-	{
-		pthread_create(&philos[i].th, NULL, routine2, &philos[i]);
-		i++;
-	}
+	inizialize_threads(&values);
 	i = 0;
 	while (i < values.num_of_philosophers)
 	{
-		pthread_join(philos[i].th, NULL);
+		pthread_join(values.phi[i].th, NULL);
 		i++;
 	}
 	return (0);

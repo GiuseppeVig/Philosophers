@@ -1,7 +1,7 @@
 NAME = Philosophers
 GCC = gcc
 FLAGS = -Wall -Werror -Wextra -g -pthread
-SRCS = philosophers.c philo_utils.c
+SRCS = 
 OBJS = $(SRCS:%.c=%.o)
 
 all: $(NAME)

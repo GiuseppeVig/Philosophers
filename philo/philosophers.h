@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:12:17 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 07:00:26 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/11/18 08:47:34 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 typedef struct	s_fork
 {
-	pthread_mutex_t fork;
+	pthread_mutex_t *fork;
 	int				id;
 } t_fork;
 
@@ -49,6 +49,8 @@ typedef struct s_data
 	int	t_to_sleep;
 	int	num_of_meals;
 	int	end;
+	int	waiting;
+	int	start;
 	t_philo	*phi;
 	t_fork	*forks;
 	pthread_mutex_t		write;
@@ -56,12 +58,18 @@ typedef struct s_data
 }	t_data;
 
 
-t_data	get_data(char **args, int limit);
-void	*routine(void *args);
-void	*routine2(void *args);
-t_philo	*inizialize_threads(t_data *info);
+void	get_data(char **args, int limit, t_data *info);
+void	inizialize_threads(t_data *info);
 int		ft_atoi(char *str);
 int	timestamp(void);
+void	take_forks(t_philo *phi);
+void	sleep(t_philo *phi);
+void	eat(t_philo *phi);
+void	think(t_philo *phi);
+void	init_philos(t_data *info);
+void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info);
+void	wait_for_start(t_data *info);
+void	check_errors(char **args, int limit);
 
 
 #endif

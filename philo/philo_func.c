@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 10:42:35 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 04:46:15 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/11/18 08:47:22 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,24 @@ void	sleep(t_philo *phi)
 	pthread_mutex_unlock(&phi->r_fork->fork);
 	pthread_mutex_unlock(&phi->l_fork->fork);
 	printf("Philosopher %d is sleeping", phi->id);
-	usleep(phi->info->t_to_sleep);
+	usleep(phi->data->t_to_sleep);
 }
 
 void	eat(t_philo *phi)
 {
-	pthread_mutex_lock(&phi->info->write);
+	pthread_mutex_lock(&phi->data->write);
 	take_forks(phi);
 	phi->is_eating = 1;
 	printf("Philosopher %d is eating", phi->id);
-	usleep(phi->info->t_to_eat);
-	phi->last_meal = timestamp() + phi->info->t_of_death;
+	usleep(phi->data->t_to_eat);
+	phi->last_meal = timestamp() + phi->data->t_of_death;
 	phi->n_of_meals++;
 	sleep(phi);
+}
+
+void	think(t_philo *phi)
+{
+	pthread_mutex_lock(&phi->data->write);
+	printf("Philosopher %d is thinking", phi->id);
+	pthread_mutex_unlock(&phi->data->lock);
 }

@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:00:42 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 09:01:59 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/11/18 09:08:52 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,19 @@ void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info)
 {
 	if (phi->id % 2 == 0)
 	{
-		phi->r_fork = &forks[i].fork;
+		phi->r_fork = &forks[i];
 		if (i == 0)
-			phi->l_fork = &forks[info->num_of_philosophers].fork;
+			phi->l_fork = &forks[info->num_of_philosophers];
 		else
-			phi->l_fork = &forks[i - 1].fork;
+			phi->l_fork = &forks[i - 1];
 	}
 	else
 	{
-		phi->l_fork = &forks[i].fork;
+		phi->l_fork = &forks[i];
 		if (i == 0)
-			phi->r_fork = &forks[info->num_of_philosophers].fork;
+			phi->r_fork = &forks[info->num_of_philosophers];
 		else
-			phi->r_fork = &forks[i - 1].fork;
+			phi->r_fork = &forks[i - 1];
 	}
 }
 
@@ -67,7 +67,7 @@ void	inizialize_threads(t_data *info)
 	i = 0;
 	while (i < info->num_of_philosophers)
 	{
-		pthread_mutex_init(&info->forks[i].fork, NULL);
+		pthread_mutex_init(info->forks[i].fork, NULL);
 		info->forks[i].id = i + 1;
 	}
 	init_philos(info);
@@ -91,6 +91,7 @@ int	main(int argc, char **argv)
 		get_data(argv, 1, &values);
 	inizialize_threads(&values);
 	i = 0;
+	dinner_time(&values);
 	while (i < values.num_of_philosophers)
 	{
 		pthread_join(values.phi[i].th, NULL);

@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:12:17 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 08:47:34 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/11/18 09:04:50 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ void	init_philos(t_data *info);
 void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info);
 void	wait_for_start(t_data *info);
 void	check_errors(char **args, int limit);
+void	*routine(void *data);
+void	dinner_time(t_data *info);
 
 
 #endif

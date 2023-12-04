@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:12:17 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 09:19:36 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/04 04:06:57 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ typedef struct s_data t_data;
 
 typedef struct	s_fork
 {
-	pthread_mutex_t *fork;
+	pthread_mutex_t fork;
 	int				id;
 } t_fork;
 
 typedef struct	s_philosophers
 {
 	pthread_t 		th;
-	int				id;	
+	int				id;
 	int				n_of_meals;
 	int				last_meal;
 	int				is_full;

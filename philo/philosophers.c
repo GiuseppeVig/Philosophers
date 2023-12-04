@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:00:42 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 09:24:57 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/04 04:10:24 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,26 @@ void	init_philos(t_data *info)
 		assign_forks(philos, info->forks, i, info);
 		pthread_mutex_init(&info->write, NULL);
 		pthread_mutex_init(&info->lock, NULL);
+		i++;
 	}
 }
 
 void	inizialize_threads(t_data *info)
 {
 	int	i;
-	
-	info->phi = malloc(sizeof(t_philo) * info->num_of_philosophers);
-	info->forks = malloc(sizeof(t_fork) * info->num_of_philosophers);
+
+	info->phi = malloc(sizeof(t_philo *) * info->num_of_philosophers);
+	info->forks = malloc(sizeof(t_fork *) * info->num_of_philosophers);
 	i = 0;
-	while (i < info->num_of_philosophers)
-	{
-		pthread_mutex_init(info->forks[i].fork, NULL);
-		info->forks[i].id = i + 1;
-	}
-	init_philos(info);
 	pthread_mutex_init(&info->write, NULL);
 	pthread_mutex_init(&info->lock, NULL);
+	while (i < info->num_of_philosophers)
+	{
+		pthread_mutex_init(&info->forks[i].fork, NULL);
+		info->forks[i].id = i + 1;
+		i++;
+	}
+	init_philos(info);
 }
 
 int	main(int argc, char **argv)

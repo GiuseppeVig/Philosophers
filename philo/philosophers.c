@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:00:42 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 09:24:57 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/11 11:37:31 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	init_philos(t_data *info)
 		assign_forks(philos, info->forks, i, info);
 		pthread_mutex_init(&info->write, NULL);
 		pthread_mutex_init(&info->lock, NULL);
+		i++;
 	}
 }
 
@@ -57,13 +58,14 @@ void	inizialize_threads(t_data *info)
 {
 	int	i;
 	
-	info->phi = malloc(sizeof(t_philo) * info->num_of_philosophers);
-	info->forks = malloc(sizeof(t_fork) * info->num_of_philosophers);
+	info->phi = (t_philo *)malloc(sizeof(t_philo) * info->num_of_philosophers);
+	info->forks = (t_fork *)malloc(sizeof(t_fork) * info->num_of_philosophers);
 	i = 0;
 	while (i < info->num_of_philosophers)
 	{
-		pthread_mutex_init(info->forks[i].fork, NULL);
+		pthread_mutex_init(&info->forks[i].fork, NULL);
 		info->forks[i].id = i + 1;
+		i++;
 	}
 	init_philos(info);
 	pthread_mutex_init(&info->write, NULL);
@@ -80,10 +82,7 @@ int	main(int argc, char **argv)
 		printf("Invalid number of values");
 		exit(1);
 	}
-	if (argc == 5)
-		get_data(argv, 0, &values);
-	else if (argc == 6)
-		get_data(argv, 1, &values);
+	get_data(argv, argc, &values);
 	inizialize_threads(&values);
 	i = 0;
 	dinner_time(&values);
@@ -92,5 +91,11 @@ int	main(int argc, char **argv)
 		pthread_join(values.phi[i].th, NULL);
 		i++;
 	}
+	if (values.end == 1)
+	{
+		clear_data(&values);
+		return (0);
+	}
+	clear_data(&values);
 	return (0);
 }

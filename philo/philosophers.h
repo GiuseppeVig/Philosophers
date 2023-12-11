@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:12:17 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 09:19:36 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/11 11:31:08 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ typedef struct s_data t_data;
 
 typedef struct	s_fork
 {
-	pthread_mutex_t *fork;
+	pthread_mutex_t fork;
 	int				id;
 } t_fork;
 
@@ -61,6 +61,7 @@ struct s_data
 
 
 void	get_data(char **args, int limit, t_data *info);
+void	clear_data(t_data *data);
 void	inizialize_threads(t_data *info);
 int		ft_atoi(char *str);
 int	timestamp(void);

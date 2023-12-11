@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:08:05 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/11/18 09:20:25 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/11 11:56:16 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,7 @@ int	ft_atoi(char *str)
 	val = 0;
 	while(str[i] == 32 || (str[i] > 8 && str[i] < 13))
 		i++;
-	if (str[i] == '-')
-	{
-		neg = -1;
-		i++;
-	}
-	while(str[i] > '0' && str[i] < '9')
+	while(str[i] >= '0' && str[i] < '9')
 	{
 		val += (str[i] - '0');
 		if (str[i + 1] == '\0')
@@ -54,7 +49,7 @@ void	check_errors(char **args, int limit)
 	int	check;
 
 	i = 1;
-	if (limit)
+	if (limit == 6)
 		check = 5;
 	else
 		check = 4;
@@ -63,7 +58,7 @@ void	check_errors(char **args, int limit)
 		j = 0;
 		while (args[i][j])
 		{
-			if (args[i][j] < '0' || args[i][j] > '9')
+			if ((args[i][j] < '0' || args[i][j] > '9') || args[i][0] == '-')
 			{
 				printf("Error: Invalid value for argument");
 				exit(1);
@@ -79,15 +74,18 @@ void	get_data(char **args, int limit, t_data *requests)
 {
 	check_errors(args, limit);
 	requests->num_of_philosophers = ft_atoi(args[1]);
-	requests->t_of_death = ft_atoi(args[2]) * 1000;
+	requests->t_of_death = ft_atoi(args[2]);
 	requests->t_to_eat = ft_atoi(args[3]) * 1000;
 	requests->t_to_sleep = ft_atoi(args[4]) * 1000;
-	if (limit)
+	if (limit == 6)
 		requests->num_of_meals = ft_atoi(args[5]);
 	else
 		requests->num_of_meals = -1;
 	requests->end = 0;
 	requests->waiting = 1;
+	printf("Time to die: %d\n", requests->t_of_death);
+	printf("Time to eat: %d\n", requests->t_to_eat);
+	printf("Time to sleep: %d\n", requests->t_to_sleep);
 }
 
 void	wait_for_start(t_philo *phi)

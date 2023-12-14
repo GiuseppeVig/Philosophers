@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:12:17 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/11 11:31:08 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/14 14:06:46 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	inizialize_threads(t_data *info);
 int		ft_atoi(char *str);
 int	timestamp(void);
 void	take_forks(t_philo *phi);
+void	take_forks2(t_philo *phi);
 void	sleeping(t_philo *phi);
 void	eat(t_philo *phi);
 void	think(t_philo *phi);
@@ -74,6 +75,7 @@ void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info);
 void	wait_for_start(t_philo *phi);
 void	check_errors(char **args, int limit);
 void	*routine(void *data);
+void	*routine2(void *data);
 void	dinner_time(t_data *info);
 
 

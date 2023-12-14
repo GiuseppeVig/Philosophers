@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 10:42:35 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/11 12:00:41 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/14 14:55:45 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,27 @@
 
 void	take_forks(t_philo *phi)
 {
-	pthread_mutex_lock(&phi->data->write);
 	printf("Philosophers %d has taken the right fork\n", phi->id);
 	pthread_mutex_lock(&phi->r_fork->fork);
 	printf("Philosophers %d has taken the left fork\n", phi->id);
 	pthread_mutex_lock(&phi->l_fork->fork);
-	pthread_mutex_unlock(&phi->data->write);
+}
+
+void	take_forks2(t_philo *phi)
+{
+	printf("Philosophers %d has taken the left fork\n", phi->id);
+	pthread_mutex_lock(&phi->l_fork->fork);
+	printf("Philosophers %d has taken the right fork\n", phi->id);
+	pthread_mutex_lock(&phi->r_fork->fork);
 }
 
 void	sleeping(t_philo *phi)
 {
-	printf("Philosopher %d is sleeping\n", phi->id);
-	usleep(phi->data->t_to_sleep);
-	pthread_mutex_unlock(&phi->data->write);
-}
-
-void	eat(t_philo *phi)
-{
-	pthread_mutex_lock(&phi->data->write);
-	phi->is_eating = 1;
-	printf("Philosopher %d is eating\n", phi->id);
-	usleep(phi->data->t_to_eat);
-	phi->last_meal = timestamp();
-	phi->n_of_meals++;
-	phi->is_eating = 0;
 	pthread_mutex_unlock(&phi->r_fork->fork);
 	pthread_mutex_unlock(&phi->l_fork->fork);
-	sleeping(phi);
+	printf("Philosopher %d is sleeping\n", phi->id);
+	pthread_mutex_unlock(&phi->data->lock);
+	usleep(phi->data->t_to_sleep);
 }
 
 void	think(t_philo *phi)
@@ -50,19 +44,23 @@ void	think(t_philo *phi)
 	pthread_mutex_unlock(&phi->data->write);
 }
 
-void	clear_data(t_data *data)
+void	eat(t_philo *phi)
 {
-	int	i;
-	
-	i = 0;
-	while (i < data->num_of_philosophers)
+	if (phi->data->end != 1)
 	{
-		pthread_mutex_destroy(&data->forks[i].fork);
-		i++;
+		pthread_mutex_lock(&phi->data->lock);
+		pthread_mutex_lock(&phi->data->write);
+		if (phi->id % 2 == 0)
+			take_forks2(phi);
+		else
+			take_forks(phi);
+		phi->is_eating = 1;
+		phi->last_meal = timestamp();
+		printf("Philosopher %d is eating\n", phi->id);
+		usleep(phi->data->t_to_eat);
+		phi->n_of_meals++;
+		phi->is_eating = 0;
+		sleeping(phi);
+		pthread_mutex_unlock(&phi->data->write);
 	}
-	i = 0;
-	pthread_mutex_destroy(&data->write);
-	pthread_mutex_destroy(&data->lock);
-	free(data->phi);
-	free(data->forks);
 }

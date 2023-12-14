@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:00:42 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/11 11:37:31 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/14 14:29:41 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,13 @@
 
 void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info)
 {
-	if (phi->id % 2 == 0)
-	{
-		phi->r_fork = &forks[i];
-		if (i == 0)
-			phi->l_fork = &forks[info->num_of_philosophers];
-		else
-			phi->l_fork = &forks[i - 1];
-	}
+	phi->r_fork = &forks[i];
+	if (i == 0)
+		phi->l_fork = &forks[info->num_of_philosophers];
 	else
-	{
-		phi->l_fork = &forks[i];
-		if (i == 0)
-			phi->r_fork = &forks[info->num_of_philosophers];
-		else
-			phi->r_fork = &forks[i - 1];
-	}
+		phi->l_fork = &forks[i - 1];
 }
+
 
 void	init_philos(t_data *info)
 {
@@ -72,6 +62,23 @@ void	inizialize_threads(t_data *info)
 	pthread_mutex_init(&info->lock, NULL);
 }
 
+void	clear_data(t_data *data)
+{
+	int	i;
+	
+	i = 0;
+	while (i < data->num_of_philosophers)
+	{
+		pthread_mutex_destroy(&data->forks[i].fork);
+		i++;
+	}
+	i = 0;
+	pthread_mutex_destroy(&data->write);
+	pthread_mutex_destroy(&data->lock);
+	free(data->phi);
+	free(data->forks);
+}
+
 int	main(int argc, char **argv)
 {
 	t_data	values;
@@ -91,8 +98,10 @@ int	main(int argc, char **argv)
 		pthread_join(values.phi[i].th, NULL);
 		i++;
 	}
-	if (values.end == 1)
+	while (values.end == 0)
 	{
+		if	(values.end == 1)
+			pthread_detach(values.phi->th);
 		clear_data(&values);
 		return (0);
 	}

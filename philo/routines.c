@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 07:18:04 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/14 14:56:33 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/17 18:19:35 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	special_case(t_data *info)
 {
+	printf("Philosospher %d has taken a fork\n", info->phi->id);
+	usleep(info->t_of_death * 1000);
 	printf("Philosospher %d is dead\n", info->phi->id);
 }
 
@@ -22,21 +24,21 @@ void	*routine(void *data)
 	t_philo	*philos;
 
 	philos = (t_philo *)data;
-	wait_for_start(philos);
 	philos->last_meal = timestamp();
-	while (philos->data->end == 0 && !philos->is_full)
+	wait_for_start(philos);
+	if (philos->id % 2 == 0)
+		usleep(500);
+	while (timestamp() - philos->last_meal <= philos->data->t_of_death && !philos->is_full)
 	{
-		think(philos);
+		eat(philos);
 		if (timestamp() - philos->last_meal >= philos->data->t_of_death && philos->is_eating == 0)
 		{
-			pthread_mutex_lock(&philos->write);
-			printf("Philosospher %d is dead\n", philos->id);
+			pthread_mutex_lock(&philos->data->write);
+			if (philos->data->end == 0)
+				printf("Philosopher %d is dead\n", philos->id);
 			philos->data->end = 1;
-			pthread_mutex_lock(&philos->lock);
 			return (NULL);
 		}
-		if (!philos->is_full && philos->data->end != 1)
-			eat(philos);
 		if (philos->n_of_meals == philos->data->num_of_meals)
 			philos->is_full = 1;
 	}

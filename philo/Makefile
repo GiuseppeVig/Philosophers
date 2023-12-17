@@ -1,4 +1,4 @@
-NAME = Philosophers
+NAME = philo
 GCC = gcc
 FLAGS = -Wall -Werror -Wextra -g -pthread
 SRCS = philo_func.c philo_utils.c routines.c philosophers.c

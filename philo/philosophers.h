@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:12:17 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/14 14:06:46 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/17 16:31:21 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ struct s_data
 	int	end;
 	int	waiting;
 	int	start;
+	int				is_dead;
 	t_philo	*phi;
 	t_fork	*forks;
 	pthread_mutex_t		write;
@@ -64,13 +65,13 @@ void	get_data(char **args, int limit, t_data *info);
 void	clear_data(t_data *data);
 void	inizialize_threads(t_data *info);
 int		ft_atoi(char *str);
-int	timestamp(void);
+int		timestamp(void);
 void	take_forks(t_philo *phi);
-void	take_forks2(t_philo *phi);
 void	sleeping(t_philo *phi);
 void	eat(t_philo *phi);
 void	think(t_philo *phi);
 void	init_philos(t_data *info);
+void	philo_msg(t_philo *phi, char *msg, int unlock);
 void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info);
 void	wait_for_start(t_philo *phi);
 void	check_errors(char **args, int limit);

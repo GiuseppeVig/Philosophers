@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:00:42 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/14 14:29:41 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/17 18:19:20 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info)
 {
 	phi->r_fork = &forks[i];
 	if (i == 0)
-		phi->l_fork = &forks[info->num_of_philosophers];
+		phi->l_fork = &forks[info->num_of_philosophers - 1];
 	else
 		phi->l_fork = &forks[i - 1];
 }
@@ -97,13 +97,6 @@ int	main(int argc, char **argv)
 	{
 		pthread_join(values.phi[i].th, NULL);
 		i++;
-	}
-	while (values.end == 0)
-	{
-		if	(values.end == 1)
-			pthread_detach(values.phi->th);
-		clear_data(&values);
-		return (0);
 	}
 	clear_data(&values);
 	return (0);

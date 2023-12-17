@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:08:05 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/14 14:19:55 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/17 17:32:47 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	get_data(char **args, int limit, t_data *requests)
 		requests->num_of_meals = -1;
 	requests->end = 0;
 	requests->waiting = 1;
+	requests->is_dead = 0;
 }
 
 void	wait_for_start(t_philo *phi)

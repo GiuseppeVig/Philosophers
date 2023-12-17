@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 07:18:04 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/17 18:19:35 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/17 19:23:40 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,14 @@ void	*routine(void *data)
 	philos->last_meal = timestamp();
 	wait_for_start(philos);
 	if (philos->id % 2 == 0)
-		usleep(500);
-	while (timestamp() - philos->last_meal <= philos->data->t_of_death && !philos->is_full)
+		usleep(150);
+	while (philos->data->end != 1 && !philos->is_full)
 	{
 		eat(philos);
-		if (timestamp() - philos->last_meal >= philos->data->t_of_death && philos->is_eating == 0)
-		{
-			pthread_mutex_lock(&philos->data->write);
-			if (philos->data->end == 0)
-				printf("Philosopher %d is dead\n", philos->id);
-			philos->data->end = 1;
-			return (NULL);
-		}
 		if (philos->n_of_meals == philos->data->num_of_meals)
 			philos->is_full = 1;
+		if (philos->data->end == 1)
+			pthread_mutex_unlock(&philos->data->write);
 	}
 	return (NULL);
 }
@@ -55,7 +49,7 @@ void	dinner_time(t_data *info)
 		return ;
 	if (info->num_of_philosophers == 1)
 		special_case(info);
-	else 
+	else
 	{
 		while (i < info->num_of_philosophers)
 		{

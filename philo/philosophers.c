@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 14:00:42 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/17 18:19:20 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/18 09:53:23 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,22 @@
 
 void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info)
 {
-	phi->r_fork = &forks[i];
-	if (i == 0)
-		phi->l_fork = &forks[info->num_of_philosophers - 1];
+	if (phi->id % 2 != 0)
+	{
+		phi->r_fork = &forks[i];
+		if (i == 0)
+			phi->l_fork = &forks[info->num_of_philosophers - 1];
+		else
+			phi->l_fork = &forks[i - 1];
+	}
 	else
-		phi->l_fork = &forks[i - 1];
+	{
+		phi->l_fork = &forks[i];
+		if (i == phi->data->num_of_philosophers - 1)
+			phi->r_fork = &forks[0];
+		else
+			phi->r_fork = &forks[i - 1];
+	}
 }
 
 
@@ -47,7 +58,7 @@ void	init_philos(t_data *info)
 void	inizialize_threads(t_data *info)
 {
 	int	i;
-	
+
 	info->phi = (t_philo *)malloc(sizeof(t_philo) * info->num_of_philosophers);
 	info->forks = (t_fork *)malloc(sizeof(t_fork) * info->num_of_philosophers);
 	i = 0;
@@ -65,7 +76,7 @@ void	inizialize_threads(t_data *info)
 void	clear_data(t_data *data)
 {
 	int	i;
-	
+
 	i = 0;
 	while (i < data->num_of_philosophers)
 	{

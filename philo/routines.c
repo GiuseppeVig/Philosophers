@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 07:18:04 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/17 19:23:40 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/18 09:31:00 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@ void	*routine(void *data)
 	philos = (t_philo *)data;
 	philos->last_meal = timestamp();
 	wait_for_start(philos);
-	if (philos->id % 2 == 0)
-		usleep(150);
+	if (philos->id % 2 != 0)
+		usleep(10);
 	while (philos->data->end != 1 && !philos->is_full)
 	{
+		philo_msg(philos, "is thinking", 1);
+		take_forks(philos);
 		eat(philos);
 		if (philos->n_of_meals == philos->data->num_of_meals)
 			philos->is_full = 1;

@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 07:18:04 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/18 09:31:00 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/20 11:21:20 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	*routine(void *data)
 	wait_for_start(philos);
 	if (philos->id % 2 != 0)
 		usleep(10);
+	pthread_create(&philos->death, NULL, death, philos);
 	while (philos->data->end != 1 && !philos->is_full)
 	{
 		philo_msg(philos, "is thinking", 1);
@@ -41,6 +42,24 @@ void	*routine(void *data)
 	return (NULL);
 }
 
+void	*death(void *data)
+{
+	t_philo	*philos;
+
+	philos = (t_philo *)data;
+	while (philos->data->end != 1 && !philos->is_full)
+	{
+		if (philos->data->end || timestamp() - philos->last_meal > philos->data->t_of_death)
+		{
+			if (philos->data->end == 0)
+				philo_msg(philos, "is dead", 0);
+			philos->data->end = 1;
+			pthread_mutex_unlock(&philos->data->write);
+			return (NULL);
+		}
+	}
+	return (NULL);
+}
 
 void	dinner_time(t_data *info)
 {

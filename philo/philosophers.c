@@ -104,10 +104,13 @@ int	main(int argc, char **argv)
 	inizialize_threads(&values);
 	i = 0;
 	dinner_time(&values);
-	while (i < values.num_of_philosophers)
+	if (values.num_of_philosophers > 1)
 	{
-		pthread_join(values.phi[i].th, NULL);
-		i++;
+		while (i < values.num_of_philosophers)
+		{
+			pthread_join(values.phi[i].th, NULL);
+			i++;
+		}
 	}
 	clear_data(&values);
 	return (0);

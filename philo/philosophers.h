@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 17:12:17 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/18 09:08:24 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/20 11:18:55 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ typedef struct	s_fork
 
 typedef struct	s_philosophers
 {
-	pthread_t 		th;
+	pthread_t		death;
+	pthread_t		th;
 	int				id;
 	int				n_of_meals;
 	int				last_meal;
@@ -76,7 +77,7 @@ void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info);
 void	wait_for_start(t_philo *phi);
 void	check_errors(char **args, int limit);
 void	*routine(void *data);
-void	*routine2(void *data);
+void	*death(void *data);
 void	dinner_time(t_data *info);
 
 

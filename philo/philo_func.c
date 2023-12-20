@@ -6,7 +6,7 @@
 /*   By: gvigilan <gvigilan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/29 10:42:35 by gvigilan          #+#    #+#             */
-/*   Updated: 2023/12/18 09:53:37 by gvigilan         ###   ########.fr       */
+/*   Updated: 2023/12/20 11:17:01 by gvigilan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ void	philo_msg(t_philo *phi, char *msg, int unlock)
 	pthread_mutex_lock(&phi->data->write);
 	if (!phi->data->end)
 	{
-		printf("Philosopher %d %s\n", phi->id, msg);
+		printf("%d   Philosopher %d %s\n",timestamp() - phi->data->start,
+			       phi->id, msg);
 	}
 	if (unlock)
 		pthread_mutex_unlock(&phi->data->write);

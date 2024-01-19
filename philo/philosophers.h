@@ -61,6 +61,7 @@ struct s_data
 	pthread_mutex_t		lock;
 };
 
+void	ft_usleep(int time);
 void	get_data(char **args, int limit, t_data *info);
 void	clear_data(t_data *data);
 void	inizialize_threads(t_data *info);

@@ -30,35 +30,22 @@ void	eat(t_philo *phi)
 		if (!phi->data->end
 			&& timestamp() - phi->last_meal <= phi->data->t_of_death)
 			digest(phi);
-		else
-		{
-			if (phi->data->end == 0)
-				philo_msg(phi, "is dead", 0);
-			phi->data->end = 1;
-		}
 	}
 }
 
 void	digest(t_philo *phi)
 {
-	if (timestamp() - phi->last_meal >= phi->data->t_of_death)
+	if (phi->data->end != 1)
 	{
-		if (phi->data->end == 0)
-			philo_msg(phi, "is dead", 0);
-		phi->data->end = 1;
-	}
-	else if (timestamp() - phi->last_meal < phi->data->t_of_death)
-	{
-		take_forks(phi);
 		phi->is_eating = 1;
+		phi->last_meal = timestamp();
 		phi->n_of_meals++;
 		philo_msg(phi, "is eating", 1);
-		usleep(phi->data->t_to_eat);
-		phi->last_meal = timestamp();
-		phi->is_eating = 0;
+		ft_usleep(phi->data->t_to_eat / 1000);
 		drop_forks(phi);
+		phi->is_eating = 0;
 		philo_msg(phi, "is sleeping", 1);
-		usleep(phi->data->t_to_sleep);
+		ft_usleep(phi->data->t_to_sleep / 1000);
 	}
 	else
 		drop_forks(phi);
@@ -75,7 +62,7 @@ void	philo_msg(t_philo *phi, char *msg, int unlock)
 	pthread_mutex_lock(&phi->data->write);
 	if (!phi->data->end)
 	{
-		printf("%d	Philosopher %d %s\n", timestamp() - phi->data->start,
+		printf("%d %d %s\n", timestamp() - phi->data->start,
 			phi->id, msg);
 	}
 	if (unlock)

@@ -15,22 +15,11 @@
 
 void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info)
 {
-	if (phi->id % 2 != 0)
-	{
-		phi->r_fork = &forks[i];
-		if (i == 0)
-			phi->l_fork = &forks[info->num_of_philosophers - 1];
-		else
-			phi->l_fork = &forks[i - 1];
-	}
+	phi->r_fork = &forks[i];
+	if (i == 0)
+		phi->l_fork = &forks[info->num_of_philosophers - 1];
 	else
-	{
-		phi->l_fork = &forks[i];
-		if (i == phi->data->num_of_philosophers - 1)
-			phi->r_fork = &forks[0];
-		else
-			phi->r_fork = &forks[i - 1];
-	}
+		phi->l_fork = &forks[i - 1];
 }
 
 void	init_philos(t_data *info)

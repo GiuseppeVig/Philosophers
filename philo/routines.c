@@ -21,7 +21,7 @@ void	*special_case(void *data)
 	pthread_create(&philos->death, NULL, death, philos);
 	philo_msg(philos, "is thinking", 1);
 	while (!philos->data->end)
-		usleep(5);
+		usleep(10);
 	return (NULL);
 }
 
@@ -33,11 +33,12 @@ void	*routine(void *data)
 	philos->last_meal = timestamp();
 	wait_for_start(philos);
 	if (philos->id % 2 != 0)
-		usleep(10);
+			ft_usleep(100);
 	pthread_create(&philos->death, NULL, death, philos);
 	while (philos->data->end != 1 && !philos->is_full)
 	{
 		philo_msg(philos, "is thinking", 1);
+		take_forks(philos);
 		eat(philos);
 		if (philos->n_of_meals == philos->data->num_of_meals)
 			philos->is_full = 1;
@@ -55,11 +56,11 @@ void	*death(void *data)
 	while (philos->data->end != 1 && !philos->is_full)
 	{
 		if ((philos->data->end
-			|| timestamp() - philos->last_meal > philos->data->t_of_death)
+				|| timestamp() - philos->last_meal > philos->data->t_of_death)
 			&& philos->is_eating != 1)
 		{
 			if (philos->data->end == 0)
-				philo_msg(philos, "is dead", 0);
+				philo_msg(philos, "died", 0);
 			philos->data->end = 1;
 			pthread_mutex_unlock(&philos->data->write);
 			return (NULL);
@@ -90,4 +91,13 @@ void	dinner_time(t_data *info)
 		info->start = timestamp();
 		info->waiting = 0;
 	}
+}
+
+void	ft_usleep(int time)
+{
+	int	start;
+
+	start = timestamp();
+	while (timestamp() - start < time)
+		usleep(10);
 }

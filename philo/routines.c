@@ -12,11 +12,17 @@
 
 #include "philosophers.h"
 
-void	special_case(t_data *info)
+void	*special_case(void *data)
 {
-	printf("Philosospher %d has taken a fork\n", info->phi->id);
-	usleep(info->t_of_death * 1000);
-	printf("Philosospher %d is dead\n", info->phi->id);
+	t_philo	*philos;
+
+	philos = (t_philo *)data;
+	philos->last_meal = timestamp();
+	pthread_create(&philos->death, NULL, death, philos);
+	philo_msg(philos, "is thinking", 1);
+	while (!philos->data->end)
+		usleep(5);
+	return (NULL);
 }
 
 void	*routine(void *data)
@@ -49,7 +55,8 @@ void	*death(void *data)
 	philos = (t_philo *)data;
 	while (philos->data->end != 1 && !philos->is_full)
 	{
-		if (philos->data->end || timestamp() - philos->last_meal > philos->data->t_of_death)
+		if (philos->data->end
+			|| timestamp() - philos->last_meal > philos->data->t_of_death)
 		{
 			if (philos->data->end == 0)
 				philo_msg(philos, "is dead", 0);
@@ -69,7 +76,10 @@ void	dinner_time(t_data *info)
 	if (info->num_of_meals == 0)
 		return ;
 	if (info->num_of_philosophers == 1)
-		special_case(info);
+	{
+		pthread_create(&info->phi[i].th, NULL, special_case, &info->phi[i]);
+		info->start = timestamp();
+	}
 	else
 	{
 		while (i < info->num_of_philosophers)

@@ -29,9 +29,9 @@ int	ft_atoi(char *str)
 	i = 0;
 	neg = 1;
 	val = 0;
-	while(str[i] == 32 || (str[i] > 8 && str[i] < 13))
+	while (str[i] == 32 || (str[i] > 8 && str[i] < 13))
 		i++;
-	while(str[i] >= '0' && str[i] < '9')
+	while (str[i] >= '0' && str[i] < '9')
 	{
 		val += (str[i] - '0');
 		if (str[i + 1] == '\0')

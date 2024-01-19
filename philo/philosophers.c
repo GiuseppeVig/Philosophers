@@ -33,7 +33,6 @@ void	assign_forks(t_philo *phi, t_fork *forks, int i, t_data *info)
 	}
 }
 
-
 void	init_philos(t_data *info)
 {
 	int		i;
@@ -93,7 +92,7 @@ void	clear_data(t_data *data)
 int	main(int argc, char **argv)
 {
 	t_data	values;
-	int i;
+	int		i;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -104,13 +103,10 @@ int	main(int argc, char **argv)
 	inizialize_threads(&values);
 	i = 0;
 	dinner_time(&values);
-	if (values.num_of_philosophers > 1)
+	while (i < values.num_of_philosophers)
 	{
-		while (i < values.num_of_philosophers)
-		{
-			pthread_join(values.phi[i].th, NULL);
-			i++;
-		}
+		pthread_join(values.phi[i].th, NULL);
+		i++;
 	}
 	clear_data(&values);
 	return (0);

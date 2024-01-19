@@ -20,15 +20,15 @@
 # include <signal.h>
 # include <sys/time.h>
 
-typedef struct s_data t_data;
+typedef struct s_data	t_data;
 
-typedef struct	s_fork
+typedef struct s_fork
 {
-	pthread_mutex_t fork;
+	pthread_mutex_t	fork;
 	int				id;
-} t_fork;
+}				t_fork;
 
-typedef struct	s_philosophers
+typedef struct s_philosophers
 {
 	pthread_t		death;
 	pthread_t		th;
@@ -42,25 +42,24 @@ typedef struct	s_philosophers
 	t_data			*data;
 	pthread_mutex_t	write;
 	pthread_mutex_t	lock;
-} t_philo;
+}				t_philo;
 
 struct s_data
 {
-	int	num_of_philosophers;
-	int	t_of_death;
-	int	t_to_eat;
-	int	t_to_sleep;
-	int	num_of_meals;
-	int	end;
-	int	waiting;
-	int	start;
-	int				is_dead;
-	t_philo	*phi;
-	t_fork	*forks;
+	int					num_of_philosophers;
+	int					t_of_death;
+	int					t_to_eat;
+	int					t_to_sleep;
+	int					num_of_meals;
+	int					end;
+	int					waiting;
+	int					start;
+	int					is_dead;
+	t_philo				*phi;
+	t_fork				*forks;
 	pthread_mutex_t		write;
 	pthread_mutex_t		lock;
 };
-
 
 void	get_data(char **args, int limit, t_data *info);
 void	clear_data(t_data *data);
@@ -79,6 +78,5 @@ void	check_errors(char **args, int limit);
 void	*routine(void *data);
 void	*death(void *data);
 void	dinner_time(t_data *info);
-
 
 #endif

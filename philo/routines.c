@@ -38,7 +38,6 @@ void	*routine(void *data)
 	while (philos->data->end != 1 && !philos->is_full)
 	{
 		philo_msg(philos, "is thinking", 1);
-		take_forks(philos);
 		eat(philos);
 		if (philos->n_of_meals == philos->data->num_of_meals)
 			philos->is_full = 1;
@@ -55,8 +54,9 @@ void	*death(void *data)
 	philos = (t_philo *)data;
 	while (philos->data->end != 1 && !philos->is_full)
 	{
-		if (philos->data->end
+		if ((philos->data->end
 			|| timestamp() - philos->last_meal > philos->data->t_of_death)
+			&& philos->is_eating != 1)
 		{
 			if (philos->data->end == 0)
 				philo_msg(philos, "is dead", 0);

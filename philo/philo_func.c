@@ -16,13 +16,10 @@ void	take_forks(t_philo *phi)
 {
 	if (!phi->data->end)
 	{
-		if (phi->id % 2 == 0)
-		{
-			pthread_mutex_lock(&phi->r_fork->fork);
-			philo_msg(phi, "has taken a fork", 1);
-			pthread_mutex_lock(&phi->l_fork->fork);
-			philo_msg(phi, "has taken a fork", 1);
-		}
+		pthread_mutex_lock(&phi->r_fork->fork);
+		philo_msg(phi, "has taken a fork", 1);
+		pthread_mutex_lock(&phi->l_fork->fork);
+		philo_msg(phi, "has taken a fork", 1);
 	}
 }
 
@@ -52,11 +49,12 @@ void	digest(t_philo *phi)
 	}
 	else if (timestamp() - phi->last_meal < phi->data->t_of_death)
 	{
+		take_forks(phi);
 		phi->is_eating = 1;
 		phi->n_of_meals++;
-		phi->last_meal = timestamp();
 		philo_msg(phi, "is eating", 1);
 		usleep(phi->data->t_to_eat);
+		phi->last_meal = timestamp();
 		phi->is_eating = 0;
 		drop_forks(phi);
 		philo_msg(phi, "is sleeping", 1);

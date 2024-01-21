@@ -33,17 +33,20 @@ void	*routine(void *data)
 	philos->last_meal = timestamp();
 	wait_for_start(philos);
 	if (philos->id % 2 != 0)
-			ft_usleep(100);
+		ft_usleep(100);
 	pthread_create(&philos->death, NULL, death, philos);
 	while (philos->data->end != 1 && !philos->is_full)
 	{
-		philo_msg(philos, "is thinking", 1);
 		take_forks(philos);
 		eat(philos);
+		philo_msg(philos, "is thinking", 1);
 		if (philos->n_of_meals == philos->data->num_of_meals)
 			philos->is_full = 1;
 		if (philos->data->end == 1)
+		{
 			pthread_mutex_unlock(&philos->data->write);
+			drop_forks(philos);
+		}
 	}
 	return (NULL);
 }
